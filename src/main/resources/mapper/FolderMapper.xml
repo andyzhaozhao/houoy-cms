@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.houoy.cms.dao.FolderMapper">
+    <select id="retrieveByPK" resultType="com.houoy.cms.vo.FolderVO">
+
+    </select>
+    <select id="retrieveAll" resultType="com.houoy.cms.vo.FolderVO">
+        select *,folder_name as text from cms_folder ORDER BY folder_code
+    </select>
+
+    <select id="retrieveByParentPK" resultType="com.houoy.cms.vo.FolderVO" parameterType="java.util.List">
+        select * from cms_folder where pk_parent in
+        <foreach collection="list" item="item" index="index"
+                 open="(" separator="," close=")">
+             #{item}
+        </foreach>
+    </select>
+
+    <select id="retrieveAllCount" resultType="java.lang.Long">
+        select count(*) from cms_folder
+    </select>
+    <select id="retrieveAllWithPage" resultType="com.houoy.cms.vo.FolderVO">
+        select * from cms_folder
+        <where>
+            <if test="folder_code!=null and folder_code!=''">
+                and folder_code like "%${folder_code}%"
+            </if>
+            <if test="folder_name != null and folder_name !=''">
+                and folder_name like "%${folder_name}%"
+            </if>
+        </where>
+        order by
+        ${orderColumnName} ${orderDir}
+        limit
+        #{start},#{length}
+    </select>
+
+    <insert id="saveByVO" parameterType="com.houoy.cms.vo.FolderVO">
+        insert into cms_folder(folder_code,folder_name,pk_parent)
+        values
+        (#{folder_code},#{folder_name},#{pk_parent})
+    </insert>
+
+    <update id="updateByVO">
+        update cms_folder
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="folder_code != null">folder_code=#{folder_code},</if>
+            <if test="folder_name != null">folder_name=#{folder_name},</if>
+            <if test="pk_parent != null">pk_parent=#{pk_parent}</if>
+        </trim>
+
+        where pk_folder=#{pk_folder}
+    </update>
+
+    <delete id="deleteByPK">
+        delete from cms_folder where pk_folder=#{pk_folder}
+    </delete>
+
+    <delete id="deleteByPKs" parameterType="java.util.List">
+        delete from cms_folder where
+        <foreach collection="list" item="item" index="index"
+                 open="(" separator="or" close=")">
+            pk_folder = #{item}
+        </foreach>
+    </delete>
+
+</mapper>
+

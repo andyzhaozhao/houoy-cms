@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.houoy.cms.dao.VideoMapper">
+    <select id="retrieveByPK" resultType="java.util.Map">
+
+    </select>
+    <select id="retrieveAll" resultType="java.util.Map">
+
+    </select>
+    <select id="retrieveAllCount" resultType="java.lang.Long">
+        select count(*) from cms_video
+    </select>
+    <select id="retrieveAllWithPage" resultType="com.houoy.cms.vo.VideoVO">
+        select * from cms_video
+        <where>
+            <if test="pk_folder != null and pk_folder !=''">
+                pk_folder = #{pk_folder}
+            </if>
+            <if test="video_code!=null and video_code!=''">
+                and video_code like "%${video_code}%"
+            </if>
+            <if test="video_name != null and video_name !=''">
+                and video_name like "%${video_name}%"
+            </if>
+        </where>
+        order by
+        ${orderColumnName} ${orderDir}
+        limit
+        #{start},#{length}
+    </select>
+
+    <insert id="saveByVO" parameterType="com.houoy.cms.vo.VideoVO">
+        insert into cms_video(video_code,video_name,pk_folder,path)
+        values
+        (#{video_code},#{video_name},#{pk_folder},#{path})
+    </insert>
+
+    <update id="updateByVO">
+        update cms_video
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="video_code != null">video_code=#{video_code},</if>
+            <if test="video_name != null">video_name=#{video_name},</if>
+            <if test="pk_folder != null">pk_folder=#{pk_folder}</if>
+        </trim>
+
+        where pk_video=#{pk_video}
+    </update>
+
+    <delete id="deleteByPK">
+        delete from cms_video where pk_video=#{pk_video}
+    </delete>
+
+    <delete id="deleteByPKs" parameterType="java.util.List">
+        delete from cms_video where
+        <foreach collection="list" item="item" index="index"
+                 open="(" separator="or" close=")">
+            pk_video = #{item}
+        </foreach>
+    </delete>
+
+</mapper>
+
