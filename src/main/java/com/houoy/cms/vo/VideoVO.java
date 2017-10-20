@@ -10,6 +10,7 @@ public class VideoVO extends SuperVO {
     private String pk_video;
     private String video_code;
     private String video_name;
+    private String video_desc;
     private String path;
     private String pk_folder;
 

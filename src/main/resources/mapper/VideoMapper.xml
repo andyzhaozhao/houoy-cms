@@ -22,6 +22,9 @@
             <if test="video_name != null and video_name !=''">
                 and video_name like "%${video_name}%"
             </if>
+            <if test="video_desc != null and video_desc !=''">
+                and video_desc like "%${video_desc}%"
+            </if>
         </where>
         order by
         ${orderColumnName} ${orderDir}
@@ -30,9 +33,9 @@
     </select>
 
     <insert id="saveByVO" parameterType="com.houoy.cms.vo.VideoVO">
-        insert into cms_video(video_code,video_name,pk_folder,path)
+        insert into cms_video(video_code,video_name,video_desc,pk_folder,path)
         values
-        (#{video_code},#{video_name},#{pk_folder},#{path})
+        (#{video_code},#{video_name},#{video_desc},#{pk_folder},#{path})
     </insert>
 
     <update id="updateByVO">
@@ -40,6 +43,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="video_code != null">video_code=#{video_code},</if>
             <if test="video_name != null">video_name=#{video_name},</if>
+            <if test="video_desc != null">video_desc=#{video_desc},</if>
             <if test="pk_folder != null">pk_folder=#{pk_folder}</if>
         </trim>
 
