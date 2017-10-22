@@ -8,21 +8,24 @@ import com.houoy.cms.vo.VideoVO;
 import com.houoy.common.utils.FileUtil;
 import com.houoy.common.utils.JqueryDataTablesUtil;
 import com.houoy.common.vo.JquryDataTablesVO;
+import com.houoy.common.vo.PageResultVO;
 import com.houoy.common.vo.RequestResultVO;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -206,14 +209,33 @@ public class VideoController {
         return resultVO;
     }
 
-    @RequestMapping(value = "/retrieve")
+    @ApiOperation(value = "分页获取运动视频列表")
+    @ApiImplicitParam(name = "videoVO", value = "视频筛选信息", required = true, paramType = "query", dataType = "VideoVO")
+    @GetMapping(value = "/retrieve")
     //返回带有图片路径的datatable数据
-    public JquryDataTablesVO<VideoVO> retrieve(VideoVO vo, HttpServletRequest request) {
-        vo = (VideoVO) JqueryDataTablesUtil.filterParam(vo, request);
-        List<VideoVO> result = videoService.retrieveAllWithPage(vo);
+    public JquryDataTablesVO<VideoVO> retrieve(VideoVO videoVO, HttpServletRequest request) {
+        videoVO = (VideoVO) JqueryDataTablesUtil.filterParam(videoVO, request);
+        List<VideoVO> result = videoService.retrieveAllWithPage(videoVO);
         Long count = videoService.retrieveAllCount();
         JquryDataTablesVO rtv = JqueryDataTablesUtil.madeJqueryDatatablesVO(Long.valueOf(count), result);
         return rtv;
     }
 
+    @ApiOperation(value = "移动端接口，分页获取运动视频列表")
+    @GetMapping("/retrieveMobile")
+    //返回带有图片路径的datatable数据
+    public PageResultVO retrieveMobile(VideoVO videoVO) {
+        List<VideoVO> result = videoService.retrieveAllWithPage(videoVO);
+        Long count = videoService.retrieveAllCount();
+        PageResultVO pageResultVO = new PageResultVO();
+        pageResultVO.setSuccess(true);
+        pageResultVO.setMsg("查询成功");
+        pageResultVO.setResultData(result);
+        pageResultVO.setStart(videoVO.getStart());
+        pageResultVO.setLength(videoVO.getLength());
+        pageResultVO.setOrderColumnName(videoVO.getOrderColumnName());
+        pageResultVO.setOrderDir(videoVO.getOrderDir());
+        pageResultVO.setTotal(count + "");
+        return pageResultVO;
+    }
 }

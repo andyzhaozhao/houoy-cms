@@ -1,4 +1,4 @@
-package com.houoy.cms.service.rest;
+package com.houoy.cms.controller;
 
 import com.houoy.cms.config.CommonConfig;
 import com.houoy.cms.service.EssayService;

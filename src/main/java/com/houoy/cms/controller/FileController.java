@@ -1,4 +1,4 @@
-package com.houoy.cms.service.rest;
+package com.houoy.cms.controller;
 
 import com.houoy.common.vo.RequestResultVO;
 import org.slf4j.Logger;
