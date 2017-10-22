@@ -95,7 +95,7 @@ public class SftpUtils {
             Vector content = sftp.ls(directory);
         } catch (SftpException e) {
             try {
-                sftp.mkdir(directory);
+                sftp.mkdir(directory+"/");
             } catch (SftpException e1) {
                 e1.printStackTrace();
             }
@@ -103,7 +103,7 @@ public class SftpUtils {
 
         try {
             if (null != sftp) {
-                sftp.cd(directory);
+                sftp.cd(directory+"/");
                 sftp.put(inputStream, fileName);
             }
         } catch (Exception e) {
