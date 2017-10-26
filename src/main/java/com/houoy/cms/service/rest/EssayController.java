@@ -1,11 +1,13 @@
-package com.houoy.cms.controller;
+package com.houoy.cms.service.rest;
 
 import com.houoy.cms.config.CommonConfig;
 import com.houoy.cms.service.EssayService;
 import com.houoy.cms.vo.EssayVO;
 import com.houoy.common.utils.JqueryDataTablesUtil;
 import com.houoy.common.vo.JquryDataTablesVO;
+import com.houoy.common.vo.PageResultVO;
 import com.houoy.common.vo.RequestResultVO;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +27,8 @@ public class EssayController {
     @Autowired
     private EssayService essayService;
 
-    @ResponseBody
-    @RequestMapping("/save")
+
+    @PostMapping("/save")
     public RequestResultVO essayAdd(@RequestBody EssayVO essayVO) {
         Integer num = null;
         RequestResultVO resultVO = new RequestResultVO();
@@ -51,7 +53,7 @@ public class EssayController {
         return resultVO;
     }
 
-    @ResponseBody
+
     @PostMapping("/delete")
     public RequestResultVO deletes(@RequestBody List<String> _ids) {
         RequestResultVO resultVO = new RequestResultVO();
@@ -68,8 +70,8 @@ public class EssayController {
         return resultVO;
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/retrieve")
+
+    @GetMapping(value = "/retrieve")
     public JquryDataTablesVO<EssayVO> retrieve(EssayVO vo, HttpServletRequest request) {
         vo = (EssayVO) JqueryDataTablesUtil.filterParam(vo, request);
 //        List<EssayVO> result = essayService.findAll();
@@ -81,8 +83,8 @@ public class EssayController {
         return rtv;
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/retrieveByPk")
+
+    @GetMapping(value = "/retrieveByPk")
     public RequestResultVO retrieve(String pk_essay) {
         List<EssayVO> result = essayService.retrieveByPK(pk_essay);
         RequestResultVO resultVO = new RequestResultVO();
@@ -90,6 +92,24 @@ public class EssayController {
         resultVO.setMsg("获取");
         resultVO.setResultData(result.get(0));
         return resultVO;
+    }
+
+    @ApiOperation(value = "移动端接口，分页获取设备类型列表")
+    @GetMapping("/retrieveMobile")
+    //返回带有图片路径的datatable数据
+    public PageResultVO retrieveMobile(EssayVO essayVO) {
+        List<EssayVO> result = essayService.retrieveAllWithPage(essayVO);
+        Long count = essayService.retrieveAllCount();
+        PageResultVO pageResultVO = new PageResultVO();
+        pageResultVO.setSuccess(true);
+        pageResultVO.setMsg("查询成功");
+        pageResultVO.setResultData(result);
+        pageResultVO.setStart(essayVO.getStart());
+        pageResultVO.setLength(essayVO.getLength());
+        pageResultVO.setOrderColumnName(essayVO.getOrderColumnName());
+        pageResultVO.setOrderDir(essayVO.getOrderDir());
+        pageResultVO.setTotal(count + "");
+        return pageResultVO;
     }
 }
 

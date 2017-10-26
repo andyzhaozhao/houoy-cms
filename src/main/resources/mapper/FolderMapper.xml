@@ -29,10 +29,12 @@
                 and folder_name like "%${folder_name}%"
             </if>
         </where>
-        order by
-        ${orderColumnName} ${orderDir}
-        limit
-        #{start},#{length}
+        <if test="orderColumnName !=null and orderDir !=null and start !=null and length !=null" >
+            order by
+            ${orderColumnName} ${orderDir}
+            limit
+            #{start},#{length}
+        </if>
     </select>
 
     <insert id="saveByVO" parameterType="com.houoy.cms.vo.FolderVO">

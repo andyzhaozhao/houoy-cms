@@ -1,13 +1,12 @@
-package com.houoy.cms.controller;
+package com.houoy.cms.service.rest;
 
 import com.houoy.cms.service.EssayTypeService;
 import com.houoy.cms.vo.EssayTypeVO;
+import com.houoy.common.vo.PageResultVO;
 import com.houoy.common.vo.RequestResultVO;
 import com.houoy.common.vo.TreeVO;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -23,8 +22,7 @@ public class EssayTypeController {
     @Resource
     private EssayTypeService essayTypeService;
 
-    @ResponseBody
-    @RequestMapping("/save")
+    @PostMapping("/save")
     public RequestResultVO add(@RequestBody EssayTypeVO vo) {
         Integer num = 0;
         RequestResultVO resultVO = new RequestResultVO();
@@ -50,8 +48,8 @@ public class EssayTypeController {
         return resultVO;
     }
 
-    @ResponseBody
-    @RequestMapping("/delete")
+
+    @PostMapping("/delete")
     public RequestResultVO delete(@RequestBody List<String> pks) {
         RequestResultVO resultVO = new RequestResultVO();
         List<EssayTypeVO> essayTypeVOs = essayTypeService.retrieveByParentPK(pks);
@@ -73,8 +71,8 @@ public class EssayTypeController {
         return resultVO;
     }
 
-    @ResponseBody
-    @RequestMapping(value = "retrieve")
+
+    @GetMapping(value = "retrieve")
     public RequestResultVO retrieve() throws Exception {
         List<EssayTypeVO> essayTypeVOs = essayTypeService.retrieveAll();
         TreeVO tree = TreeVO.listToTreeNode(essayTypeVOs);
@@ -91,6 +89,23 @@ public class EssayTypeController {
         return resultVO;
     }
 
+    @ApiOperation(value = "移动端接口，分页获取设备类型列表")
+    @GetMapping("/retrieveMobile")
+    //返回带有图片路径的datatable数据
+    public PageResultVO retrieveMobile(EssayTypeVO essayTypeVO) {
+        List<EssayTypeVO> result = essayTypeService.retrieveAllWithPage(essayTypeVO);
+        Long count = essayTypeService.retrieveAllCount();
+        PageResultVO pageResultVO = new PageResultVO();
+        pageResultVO.setSuccess(true);
+        pageResultVO.setMsg("查询成功");
+        pageResultVO.setResultData(result);
+        pageResultVO.setStart(essayTypeVO.getStart());
+        pageResultVO.setLength(essayTypeVO.getLength());
+        pageResultVO.setOrderColumnName(essayTypeVO.getOrderColumnName());
+        pageResultVO.setOrderDir(essayTypeVO.getOrderDir());
+        pageResultVO.setTotal(count + "");
+        return pageResultVO;
+    }
 }
 
 
