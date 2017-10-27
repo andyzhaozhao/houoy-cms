@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 文章分类目录管理
  */
@@ -23,6 +25,7 @@ public class EssayTypeVO extends TreeVO<EssayTypeVO> {
     private String pk_parent;
 
     //冗余字段
+    @ApiModelProperty(required = false,hidden = true)
     private String text;
 
     @Override

@@ -30,9 +30,13 @@ public class EssayVO extends SuperVO {
     private String ts_start;//活动开始时间
     @ApiModelProperty(value = "结束时间", example = "name",hidden = false)
     private String ts_end;//活动结束时间
-    @ApiModelProperty(required = false,hidden = true)
+    @ApiModelProperty(value = "属于哪个类型", example = "name",hidden = false)
     private String pk_type;//属于哪个类型
 
+    @ApiModelProperty(value = "作者用户pk", example = "name",hidden = false)
+    private String pk_person;//属于哪个类型
+    @ApiModelProperty(value = "作者用户名称", example = "name",hidden = false)
+    private String person_name;//属于哪个类型
 
     @Override
     public String getPKField() {

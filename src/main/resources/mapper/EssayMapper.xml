@@ -3,9 +3,11 @@
 <mapper namespace="com.houoy.cms.dao.EssayMapper">
     <sql id="columnNames">
         essay_code,essay_name,essay_subname,essay_content,ts_start,ts_end,pk_type,is_publish
+        ,pk_person,person_name
     </sql>
     <sql id="columnValues">
         #{essay_code},#{essay_name},#{essay_subname},#{essay_content},#{ts_start},#{ts_end},#{pk_type},#{is_publish}
+        ,#{pk_person},#{person_name}
     </sql>
     <sql id="ifWhere">
         <if test="pk_essay != null and pk_essay !=''">
@@ -24,10 +26,16 @@
             and ts_start like "%${ts_start}%"
         </if>
         <if test="pk_type != null and pk_type !=''">
-            and pk_type like "%${pk_type}%"
+            and pk_type  = #{pk_type}
         </if>
         <if test="is_publish != null and is_publish !=''">
             and is_publish like "%${is_publish}%"
+        </if>
+        <if test="pk_person != null and pk_person !=''">
+            and pk_person = #{pk_person}
+        </if>
+        <if test="person_name != null and person_name !=''">
+            and person_name like "%${person_name}%"
         </if>
     </sql>
     <sql id="ifSet">
@@ -39,6 +47,8 @@
         <if test="ts_end != null">ts_end=#{ts_end},</if>
         <if test="pk_type != null">pk_type=#{pk_type},</if>
         <if test="is_publish != null">is_publish=#{is_publish},</if>
+        <if test="pk_person != null">pk_person=#{pk_person},</if>
+        <if test="person_name != null">person_name=#{person_name},</if>
     </sql>
     <sql id="pk">
         pk_essay = #{pk_essay}
