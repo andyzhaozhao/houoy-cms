@@ -2,9 +2,9 @@ package com.houoy.cms.controller;
 
 import com.houoy.cms.config.NginxConfig;
 import com.houoy.cms.service.ImageService;
-import com.houoy.cms.utils.SftpUtils;
 import com.houoy.cms.vo.ImageVO;
 import com.houoy.common.utils.JqueryDataTablesUtil;
+import com.houoy.common.utils.SftpUtils;
 import com.houoy.common.vo.JquryDataTablesVO;
 import com.houoy.common.vo.RequestResultVO;
 import org.apache.commons.logging.Log;
@@ -58,7 +58,7 @@ public class ImageController {
                     String fileName = file.getOriginalFilename();
                     SftpUtils sftpUtils = new SftpUtils(nginxConfig.getUrl(), nginxConfig.getPort(), nginxConfig.getUser()
                             , nginxConfig.getPass());
-                    sftpUtils.upload(nginxConfig.getPath()+"/"+imageVO.getPath(), file.getInputStream(), fileName);
+                    sftpUtils.upload(nginxConfig.getPath() + "/" + imageVO.getPath(), file.getInputStream(), fileName);
                 }
 
                 resultVO.setSuccess(true);
