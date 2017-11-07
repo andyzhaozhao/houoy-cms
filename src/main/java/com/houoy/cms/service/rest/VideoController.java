@@ -48,7 +48,7 @@ public class VideoController {
     @Autowired
     private CommonConfig commonConfig;
 
-   /* @PostMapping("/save")
+    /* @PostMapping("/save")
     public RequestResultVO add(VideoVO videoVO, HttpServletRequest request) throws IOException {
         Integer num = 0;
         RequestResultVO resultVO = new RequestResultVO();

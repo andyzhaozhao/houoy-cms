@@ -48,7 +48,6 @@ public class EssayTypeController {
         return resultVO;
     }
 
-
     @PostMapping("/delete")
     public RequestResultVO delete(@RequestBody List<String> pks) {
         RequestResultVO resultVO = new RequestResultVO();

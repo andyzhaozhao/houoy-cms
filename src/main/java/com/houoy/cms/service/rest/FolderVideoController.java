@@ -1,14 +1,14 @@
-package com.houoy.cms.controller;
+package com.houoy.cms.service.rest;
 
 import com.houoy.cms.service.FolderService;
 import com.houoy.cms.service.FolderVideoService;
+import com.houoy.cms.vo.EssayTypeVO;
 import com.houoy.cms.vo.FolderVO;
+import com.houoy.common.vo.PageResultVO;
 import com.houoy.common.vo.RequestResultVO;
 import com.houoy.common.vo.TreeVO;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,8 +24,7 @@ public class FolderVideoController {
     @Resource
     private FolderVideoService folderVideoService;
 
-    @ResponseBody
-    @RequestMapping("/save")
+    @PostMapping("/save")
     public RequestResultVO add(@RequestBody FolderVO vo) {
         Integer num = 0;
         RequestResultVO resultVO = new RequestResultVO();
@@ -51,8 +50,7 @@ public class FolderVideoController {
         return resultVO;
     }
 
-    @ResponseBody
-    @RequestMapping("/delete")
+    @PostMapping("/delete")
     public RequestResultVO delete(@RequestBody List<String> pks) {
         RequestResultVO resultVO = new RequestResultVO();
         List<FolderVO> folderVOs = folderVideoService.retrieveByParentPK(pks);
@@ -74,8 +72,7 @@ public class FolderVideoController {
         return resultVO;
     }
 
-    @ResponseBody
-    @RequestMapping(value = "retrieve")
+    @GetMapping(value = "retrieve")
     public RequestResultVO retrieve() throws Exception {
         List<FolderVO> folderVOs = folderVideoService.retrieveAll();
         TreeVO tree = TreeVO.listToTreeNode(folderVOs);
@@ -92,6 +89,22 @@ public class FolderVideoController {
         return resultVO;
     }
 
+    @ApiOperation(value = "移动端接口，分页获取视频目录列表")
+    @GetMapping("/retrieveMobile")
+    public PageResultVO retrieveMobile(FolderVO folderVO) {
+        List<FolderVO> result = folderVideoService.retrieveAllWithPage(folderVO);
+        Long count = folderVideoService.retrieveAllCount();
+        PageResultVO pageResultVO = new PageResultVO();
+        pageResultVO.setSuccess(true);
+        pageResultVO.setMsg("查询成功");
+        pageResultVO.setResultData(result);
+        pageResultVO.setStart(folderVO.getStart());
+        pageResultVO.setLength(folderVO.getLength());
+        pageResultVO.setOrderColumnName(folderVO.getOrderColumnName());
+        pageResultVO.setOrderDir(folderVO.getOrderDir());
+        pageResultVO.setTotal(count + "");
+        return pageResultVO;
+    }
 }
 
 
