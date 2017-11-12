@@ -37,6 +37,8 @@ public class EssayVO extends SuperVO {
     private String pk_person;//属于哪个类型
     @ApiModelProperty(value = "作者用户名称", example = "name",hidden = false)
     private String person_name;//属于哪个类型
+    @ApiModelProperty(value = "缩略图路径",hidden = false)
+    private String path_thumbnail;
 
     @Override
     public String getPKField() {

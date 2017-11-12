@@ -41,9 +41,9 @@
     </select>
 
     <insert id="saveByVO" parameterType="com.houoy.cms.vo.VideoVO">
-        insert into cms_video(video_code,video_name,video_desc,video_length,pk_folder,path)
+        insert into cms_video(video_code,video_name,video_desc,video_length,pk_folder,path,actor_times,actor_calorie,path_thumbnail)
         values
-        (#{video_code},#{video_name},#{video_desc},#{video_length},#{pk_folder},#{path})
+        (#{video_code},#{video_name},#{video_desc},#{video_length},#{pk_folder},#{path},#{actor_times},#{actor_calorie},#{path_thumbnail})
     </insert>
 
     <update id="updateByVO">
@@ -53,6 +53,9 @@
             <if test="video_name != null">video_name=#{video_name},</if>
             <if test="video_desc != null">video_desc=#{video_desc},</if>
             <if test="video_length != null">video_length=#{video_length},</if>
+            <if test="actor_times != null">actor_times=#{actor_times},</if>
+            <if test="actor_calorie != null">actor_calorie=#{actor_calorie},</if>
+            <if test="path_thumbnail != null">path_thumbnail=#{path_thumbnail},</if>
             <if test="pk_folder != null">pk_folder=#{pk_folder}</if>
         </trim>
 

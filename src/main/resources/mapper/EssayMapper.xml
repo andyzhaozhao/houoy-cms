@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.houoy.cms.dao.EssayMapper">
     <sql id="columnNames">
-        essay_code,essay_name,essay_subname,essay_content,ts_start,ts_end,pk_type,is_publish
-        ,pk_person,person_name
+        essay_code,essay_name,essay_subname,essay_content,ts_start,ts_end,pk_type,is_publish,
+        ,pk_person,person_name,path_thumbnail
     </sql>
     <sql id="columnValues">
         #{essay_code},#{essay_name},#{essay_subname},#{essay_content},#{ts_start},#{ts_end},#{pk_type},#{is_publish}
-        ,#{pk_person},#{person_name}
+        ,#{pk_person},#{person_name},#{path_thumbnail}
     </sql>
     <sql id="ifWhere">
         <if test="pk_essay != null and pk_essay !=''">
@@ -49,6 +49,7 @@
         <if test="is_publish != null">is_publish=#{is_publish},</if>
         <if test="pk_person != null">pk_person=#{pk_person},</if>
         <if test="person_name != null">person_name=#{person_name},</if>
+        <if test="path_thumbnail != null">path_thumbnail=#{path_thumbnail},</if>
     </sql>
     <sql id="pk">
         pk_essay = #{pk_essay}
