@@ -18,6 +18,8 @@ public class VideoVO extends SuperVO {
     private String video_desc;
     @ApiModelProperty(value = "视频时长（秒）",hidden = false)
     private String video_length;
+    @ApiModelProperty(value = "视频大小（byte）",hidden = false)
+    private String video_size;
     @ApiModelProperty(value = "人物单只手臂活动次数(次)",hidden = false)
     private String actor_times;
     @ApiModelProperty(value = "人物消耗卡路里大概值(cal)",hidden = false)
