@@ -39,6 +39,9 @@
 
     <select id="retrieveAllCount" resultType="java.lang.Long">
         select count(*) from cms_essay_type
+        <where>
+            <include refid="ifWhere"/>
+        </where>
     </select>
     <select id="retrieveAllWithPage" resultType="com.houoy.cms.vo.EssayTypeVO">
         select * from cms_essay_type

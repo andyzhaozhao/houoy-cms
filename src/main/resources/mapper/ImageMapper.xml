@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.houoy.cms.dao.ImageMapper">
+    <sql id="ifWhere">
+        <if test="pk_folder != null and pk_folder !=''">
+            pk_folder = #{pk_folder}
+        </if>
+        <if test="image_code!=null and image_code!=''">
+            and image_code like "%${image_code}%"
+        </if>
+        <if test="image_name != null and image_name !=''">
+            and image_name like "%${image_name}%"
+        </if>
+    </sql>
     <select id="retrieveByPK" resultType="java.util.Map">
 
     </select>
@@ -9,19 +20,14 @@
     </select>
     <select id="retrieveAllCount" resultType="java.lang.Long">
         select count(*) from cms_image
+        <where>
+            <include refid="ifWhere"/>
+        </where>
     </select>
     <select id="retrieveAllWithPage" resultType="com.houoy.cms.vo.ImageVO">
         select * from cms_image
         <where>
-            <if test="pk_folder != null and pk_folder !=''">
-                pk_folder = #{pk_folder}
-            </if>
-            <if test="image_code!=null and image_code!=''">
-                and image_code like "%${image_code}%"
-            </if>
-            <if test="image_name != null and image_name !=''">
-                and image_name like "%${image_name}%"
-            </if>
+            <include refid="ifWhere"/>
         </where>
         <if test="orderColumnName !=null and orderDir !=null and start !=null and length !=null" >
             order by

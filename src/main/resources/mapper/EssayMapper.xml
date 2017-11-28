@@ -63,6 +63,9 @@
     </select>
     <select id="retrieveAllCount" resultType="java.lang.Long">
         select count(*) from cms_essay
+        <where>
+            <include refid="ifWhere"/>
+        </where>
     </select>
     <select id="retrieveAllWithPage" resultType="com.houoy.cms.vo.EssayVO">
         select * from cms_essay

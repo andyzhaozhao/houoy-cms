@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.houoy.cms.dao.FolderVideoMapper">
+    <sql id="ifWhere">
+        <if test="folder_code!=null and folder_code!=''">
+            and folder_code like "%${folder_code}%"
+        </if>
+        <if test="folder_name != null and folder_name !=''">
+            and folder_name like "%${folder_name}%"
+        </if>
+    </sql>
     <select id="retrieveByPK" resultType="com.houoy.cms.vo.FolderVO">
 
     </select>
@@ -18,16 +26,14 @@
 
     <select id="retrieveAllCount" resultType="java.lang.Long">
         select count(*) from cms_folder_video
+        <where>
+            <include refid="ifWhere"/>
+        </where>
     </select>
     <select id="retrieveAllWithPage" resultType="com.houoy.cms.vo.FolderVO">
         select * from cms_folder_video
         <where>
-            <if test="folder_code!=null and folder_code!=''">
-                and folder_code like "%${folder_code}%"
-            </if>
-            <if test="folder_name != null and folder_name !=''">
-                and folder_name like "%${folder_name}%"
-            </if>
+            <include refid="ifWhere"/>
         </where>
         <if test="orderColumnName !=null and orderDir !=null and start !=null and length !=null" >
             order by
