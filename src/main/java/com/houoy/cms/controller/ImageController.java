@@ -98,7 +98,7 @@ public class ImageController {
     public JquryDataTablesVO<ImageVO> retrieve(ImageVO vo, HttpServletRequest request) {
         vo = (ImageVO) JqueryDataTablesUtil.filterParam(vo, request);
         List<ImageVO> result = imageService.retrieveAllWithPage(vo);
-        Long count = imageService.retrieveAllCount();
+        Long count = imageService.retrieveAllCount(vo);
         JquryDataTablesVO rtv = JqueryDataTablesUtil.madeJqueryDatatablesVO(Long.valueOf(count), result);
         return rtv;
     }

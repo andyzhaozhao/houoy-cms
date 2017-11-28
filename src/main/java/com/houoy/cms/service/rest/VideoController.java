@@ -216,7 +216,7 @@ public class VideoController {
     public JquryDataTablesVO<VideoVO> retrieve(VideoVO videoVO, HttpServletRequest request) {
         videoVO = (VideoVO) JqueryDataTablesUtil.filterParam(videoVO, request);
         List<VideoVO> result = videoService.retrieveAllWithPage(videoVO);
-        Long count = videoService.retrieveAllCount();
+        Long count = videoService.retrieveAllCount(videoVO);
         JquryDataTablesVO rtv = JqueryDataTablesUtil.madeJqueryDatatablesVO(Long.valueOf(count), result);
         return rtv;
     }
@@ -226,7 +226,7 @@ public class VideoController {
     //返回带有图片路径的datatable数据
     public PageResultVO retrieveMobile(VideoVO videoVO) {
         List<VideoVO> result = videoService.retrieveAllWithPage(videoVO);
-        Long count = videoService.retrieveAllCount();
+        Long count = videoService.retrieveAllCount(videoVO);
         PageResultVO pageResultVO = new PageResultVO();
         pageResultVO.setSuccess(true);
         pageResultVO.setMsg("查询成功");

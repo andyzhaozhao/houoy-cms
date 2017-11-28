@@ -93,7 +93,7 @@ public class EssayTypeController {
     //返回带有图片路径的datatable数据
     public PageResultVO retrieveMobile(EssayTypeVO essayTypeVO) {
         List<EssayTypeVO> result = essayTypeService.retrieveAllWithPage(essayTypeVO);
-        Long count = essayTypeService.retrieveAllCount();
+        Long count = essayTypeService.retrieveAllCount(essayTypeVO);
         PageResultVO pageResultVO = new PageResultVO();
         pageResultVO.setSuccess(true);
         pageResultVO.setMsg("查询成功");

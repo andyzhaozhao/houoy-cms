@@ -77,7 +77,7 @@ public class EssayController {
 //        List<EssayVO> result = essayService.findAll();
 //        Long count = essayService.count();
         List<EssayVO> result = essayService.retrieveAllWithPage(vo);
-        Long count = essayService.retrieveAllCount();
+        Long count = essayService.retrieveAllCount(vo);
 
         JquryDataTablesVO rtv = JqueryDataTablesUtil.madeJqueryDatatablesVO(count, result);
         return rtv;
@@ -99,7 +99,7 @@ public class EssayController {
     //返回带有图片路径的datatable数据
     public PageResultVO retrieveMobile(EssayVO essayVO) {
         List<EssayVO> result = essayService.retrieveAllWithPage(essayVO);
-        Long count = essayService.retrieveAllCount();
+        Long count = essayService.retrieveAllCount(essayVO);
         PageResultVO pageResultVO = new PageResultVO();
         pageResultVO.setSuccess(true);
         pageResultVO.setMsg("查询成功");

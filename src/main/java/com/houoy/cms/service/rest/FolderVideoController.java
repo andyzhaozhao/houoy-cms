@@ -93,7 +93,7 @@ public class FolderVideoController {
     @GetMapping("/retrieveMobile")
     public PageResultVO retrieveMobile(FolderVO folderVO) {
         List<FolderVO> result = folderVideoService.retrieveAllWithPage(folderVO);
-        Long count = folderVideoService.retrieveAllCount();
+        Long count = folderVideoService.retrieveAllCount(folderVO);
         PageResultVO pageResultVO = new PageResultVO();
         pageResultVO.setSuccess(true);
         pageResultVO.setMsg("查询成功");
