@@ -30,8 +30,8 @@ public class FolderVideoServiceImpl implements FolderVideoService {
     }
 
     @Override
-    public Long retrieveAllCount() throws RuntimeException {
-        return folderVideoMapper.retrieveAllCount();
+    public Long retrieveAllCount(FolderVO vo) throws RuntimeException {
+        return folderVideoMapper.retrieveAllCount(vo);
     }
 
     @Override

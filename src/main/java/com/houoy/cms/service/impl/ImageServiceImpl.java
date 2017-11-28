@@ -28,8 +28,8 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Long retrieveAllCount() throws RuntimeException {
-        return imageMapper.retrieveAllCount();
+    public Long retrieveAllCount(ImageVO vo) throws RuntimeException {
+        return imageMapper.retrieveAllCount(vo);
     }
 
     @Override

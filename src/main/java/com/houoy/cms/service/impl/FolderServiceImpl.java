@@ -28,8 +28,8 @@ public class FolderServiceImpl implements FolderService {
     }
 
     @Override
-    public Long retrieveAllCount() throws RuntimeException {
-        return folderMapper.retrieveAllCount();
+    public Long retrieveAllCount(FolderVO vo) throws RuntimeException {
+        return folderMapper.retrieveAllCount( vo);
     }
 
     @Override
