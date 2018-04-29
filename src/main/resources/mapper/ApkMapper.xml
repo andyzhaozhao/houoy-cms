@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.houoy.cms.dao.ApkMapper">
+    <sql id="ifWhere">
+        <if test="pk_folder != null and pk_folder !=''">
+            pk_folder = #{pk_folder}
+        </if>
+        <if test="newestVersionCode!=null and newestVersionCode!=''">
+            and newestVersionCode like "%${newestVersionCode}%"
+        </if>
+        <if test="newestVersionName != null and newestVersionName !=''">
+            and newestVersionName like "%${newestVersionName}%"
+        </if>
+        <if test="comment != null and comment !=''">
+            and comment like "%${comment}%"
+        </if>
+        <if test="size != null and size !=''">
+            and size like "%${size}%"
+        </if>
+        <if test="url != null and url !=''">
+            and url = "${url}"
+        </if>
+    </sql>
+    <select id="retrieveByPK" resultType="java.util.Map">
+
+    </select>
+    <select id="retrieveAll" resultType="java.util.Map">
+
+    </select>
+    <select id="retrieveAllCount" resultType="java.lang.Long">
+        select count(*) from cms_apk
+        <where>
+            <include refid="ifWhere"/>
+        </where>
+    </select>
+    <select id="retrieveAllWithPage" resultType="com.houoy.cms.vo.ApkVO">
+        select * from cms_apk
+        <where>
+            <include refid="ifWhere"/>
+        </where>
+        <if test="orderColumnName !=null and orderDir !=null and start !=null and length !=null" >
+            order by
+            ${orderColumnName} ${orderDir}
+            limit
+            #{start},#{length}
+        </if>
+    </select>
+
+    <insert id="saveByVO" parameterType="com.houoy.cms.vo.ApkVO">
+        insert into cms_apk(newestVersionCode,newestVersionName,comment,size,pk_folder,url)
+        values
+        (#{newestVersionCode},#{newestVersionName},#{comment},#{size},#{pk_folder},#{url})
+    </insert>
+
+    <update id="updateByVO">
+        update cms_apk
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="newestVersionCode != null">newestVersionCode=#{newestVersionCode},</if>
+            <if test="newestVersionName != null">newestVersionName=#{newestVersionName},</if>
+            <if test="comment != null">comment=#{comment},</if>
+            <if test="size != null">size=#{size},</if>
+            <if test="url != null">url=#{url},</if>
+            <if test="pk_folder != null">pk_folder=#{pk_folder}</if>
+        </trim>
+
+        where pk_apk=#{pk_apk}
+    </update>
+
+    <delete id="deleteByPK">
+        delete from cms_apk where pk_apk=#{pk_apk}
+    </delete>
+
+    <delete id="deleteByPKs" parameterType="java.util.List">
+        delete from cms_apk where
+        <foreach collection="list" item="item" index="index"
+                 open="(" separator="or" close=")">
+            pk_apk = #{item}
+        </foreach>
+    </delete>
+
+</mapper>
+

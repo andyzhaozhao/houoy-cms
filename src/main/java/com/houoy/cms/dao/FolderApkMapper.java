@@ -10,7 +10,7 @@ import java.util.List;
  * @author andyzhao
  */
 @Mapper
-public interface FolderMapper extends BaseMapper<FolderVO> {
+public interface FolderApkMapper extends BaseMapper<FolderVO> {
     @Override
-    List<FolderVO> retrieveByParentPK(List<String> pks) ;
+    List<FolderVO> retrieveByParentPK(List<String> pks);
 }

@@ -33,6 +33,7 @@ nginx:
   pass: Andy891014@
   path: /usr/local/nginx/html/image
   pathVideo: /usr/local/nginx/html/video
+  pathApk: /usr/local/nginx/html/apk
 
 
 mybatis:

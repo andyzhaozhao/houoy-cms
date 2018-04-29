@@ -2,8 +2,8 @@ package com.houoy.cms.service.rest;
 
 import com.houoy.cms.config.CommonConfig;
 import com.houoy.cms.config.NginxConfig;
-import com.houoy.cms.service.VideoService;
-import com.houoy.cms.vo.VideoVO;
+import com.houoy.cms.service.ApkService;
+import com.houoy.cms.vo.ApkVO;
 import com.houoy.common.utils.FileUtil;
 import com.houoy.common.utils.JqueryDataTablesUtil;
 import com.houoy.common.utils.SftpUtils;
@@ -34,67 +34,32 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * 视频管理
+ * apk安装包管理
  * Created by andyzhao on 2017/5/2.
  */
 @RestController
-@RequestMapping("/api/video")
-public class VideoController {
-    private static final Log logger = LogFactory.getLog(VideoController.class);
+@RequestMapping("/api/apk")
+public class ApkController {
+    private static final Log logger = LogFactory.getLog(ApkController.class);
 
     @Resource
-    private VideoService videoService;
+    private ApkService apkService;
 
     @Autowired
     private NginxConfig nginxConfig;
 
     @Autowired
     private CommonConfig commonConfig;
-
-    /* @PostMapping("/save")
-    public RequestResultVO add(VideoVO videoVO, HttpServletRequest request) throws IOException {
-        Integer num = 0;
-        RequestResultVO resultVO = new RequestResultVO();
-        if (videoVO != null) {
-            if (videoVO.getPk_video() != null) {//如果前端传递过来pk,则判断为更新操作
-                num = videoService.updateByVO(videoVO);
-            } else {
-                num = videoService.saveByVO(videoVO);
-            }
-
-            if (num >= 1) {
-                List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-                if (files != null && files.size() > 0) {
-                    MultipartFile file = files.get(0);
-                    String fileName = file.getOriginalFilename();
-                    SftpUtils sftpUtils = new SftpUtils(nginxConfig.getUrl(), nginxConfig.getPort(), nginxConfig.getUser()
-                            , nginxConfig.getPass());
-                    sftpUtils.upload(nginxConfig.getPath() + "/" + videoVO.getPath(), file.getInputStream(), fileName);
-                }
-
-                resultVO.setSuccess(true);
-                resultVO.setMsg("保存成功");
-                resultVO.setResultData(num);
-            } else {
-                resultVO.setSuccess(false);
-                resultVO.setMsg("保存失败");
-            }
-        } else {
-            resultVO.setSuccess(false);
-            resultVO.setMsg("参数不可为null");
-        }
-        return resultVO;
-    }*/
-
+    
     @PostMapping("/save")
-    public RequestResultVO add(@RequestBody VideoVO videoVO) throws IOException {
+    public RequestResultVO add(@RequestBody ApkVO apkVO) throws IOException {
         Integer num = 0;
         RequestResultVO resultVO = new RequestResultVO();
-        if (videoVO != null) {
-            if (videoVO.getPk_video() != null) {//如果前端传递过来pk,则判断为更新操作
-                num = videoService.updateByVO(videoVO);
+        if (apkVO != null) {
+            if (apkVO.getPk_apk() != null) {//如果前端传递过来pk,则判断为更新操作
+                num = apkService.updateByVO(apkVO);
             } else {
-                num = videoService.saveByVO(videoVO);
+                num = apkService.saveByVO(apkVO);
             }
 
             if (num >= 1) {
@@ -183,7 +148,7 @@ public class VideoController {
                         , nginxConfig.getPass());
                 File nff = new File(newFileName);
                 FileInputStream newFileInputStream = new FileInputStream(nff);
-                sftpUtils.upload(nginxConfig.getPathVideo() + "/" + path, newFileInputStream, fileName);
+                sftpUtils.upload(nginxConfig.getPathApk() + "/" + path, newFileInputStream, fileName);
                 newFileInputStream.close();
                 nff.delete();
 
@@ -198,7 +163,7 @@ public class VideoController {
 
     @PostMapping("/delete")
     public RequestResultVO delete(@RequestBody List<String> pk_roles) {
-        Integer num = videoService.deleteByPK(pk_roles);
+        Integer num = apkService.deleteByPK(pk_roles);
         RequestResultVO resultVO = new RequestResultVO();
         if (num >= 1) {
             resultVO.setSuccess(true);
@@ -213,13 +178,13 @@ public class VideoController {
     }
 
     @ApiOperation(value = "分页获取运动视频列表")
-    @ApiImplicitParam(name = "videoVO", value = "视频筛选信息", required = true, paramType = "query", dataType = "VideoVO")
+    @ApiImplicitParam(name = "apkVO", value = "视频筛选信息", required = true, paramType = "query", dataType = "ApkVO")
     @GetMapping(value = "/retrieve")
     //返回带有图片路径的datatable数据
-    public JquryDataTablesVO<VideoVO> retrieve(VideoVO videoVO, HttpServletRequest request) {
-        videoVO = (VideoVO) JqueryDataTablesUtil.filterParam(videoVO, request);
-        List<VideoVO> result = videoService.retrieveAllWithPage(videoVO);
-        Long count = videoService.retrieveAllCount(videoVO);
+    public JquryDataTablesVO<ApkVO> retrieve(ApkVO apkVO, HttpServletRequest request) {
+        apkVO = (ApkVO) JqueryDataTablesUtil.filterParam(apkVO, request);
+        List<ApkVO> result = apkService.retrieveAllWithPage(apkVO);
+        Long count = apkService.retrieveAllCount(apkVO);
         JquryDataTablesVO rtv = JqueryDataTablesUtil.madeJqueryDatatablesVO(Long.valueOf(count), result);
         return rtv;
     }
@@ -227,17 +192,17 @@ public class VideoController {
     @ApiOperation(value = "移动端接口，分页获取运动视频列表")
     @GetMapping("/retrieveMobile")
     //返回带有图片路径的datatable数据
-    public PageResultVO retrieveMobile(VideoVO videoVO) {
-        List<VideoVO> result = videoService.retrieveAllWithPage(videoVO);
-        Long count = videoService.retrieveAllCount(videoVO);
+    public PageResultVO retrieveMobile(ApkVO apkVO) {
+        List<ApkVO> result = apkService.retrieveAllWithPage(apkVO);
+        Long count = apkService.retrieveAllCount(apkVO);
         PageResultVO pageResultVO = new PageResultVO();
         pageResultVO.setSuccess(true);
         pageResultVO.setMsg("查询成功");
         pageResultVO.setResultData(result);
-        pageResultVO.setStart(videoVO.getStart());
-        pageResultVO.setLength(videoVO.getLength());
-        pageResultVO.setOrderColumnName(videoVO.getOrderColumnName());
-        pageResultVO.setOrderDir(videoVO.getOrderDir());
+        pageResultVO.setStart(apkVO.getStart());
+        pageResultVO.setLength(apkVO.getLength());
+        pageResultVO.setOrderColumnName(apkVO.getOrderColumnName());
+        pageResultVO.setOrderDir(apkVO.getOrderDir());
         pageResultVO.setTotal(count);
         return pageResultVO;
     }

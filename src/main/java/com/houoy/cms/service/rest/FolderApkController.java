@@ -1,6 +1,6 @@
 package com.houoy.cms.service.rest;
 
-import com.houoy.cms.service.FolderVideoService;
+import com.houoy.cms.service.FolderApkService;
 import com.houoy.cms.vo.FolderVO;
 import com.houoy.common.vo.PageResultVO;
 import com.houoy.common.vo.RequestResultVO;
@@ -16,15 +16,15 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 视频资源目录管理
+ * apk资源目录管理
  * Created by andyzhao on 2017/5/2.
  */
 @RestController
-@RequestMapping("/api/folderVideo")
-public class FolderVideoController {
+@RequestMapping("/api/folderApk")
+public class FolderApkController {
 
     @Resource
-    private FolderVideoService folderVideoService;
+    private FolderApkService folderApkService;
 
     @PostMapping("/save")
     public RequestResultVO add(@RequestBody FolderVO vo) {
@@ -32,9 +32,9 @@ public class FolderVideoController {
         RequestResultVO resultVO = new RequestResultVO();
         if (vo != null) {
             if (vo.getPk_folder() != null) {//如果前端传递过来pk,则判断为更新操作
-                num = folderVideoService.updateByVO(vo);
+                num = folderApkService.updateByVO(vo);
             } else {
-                num = folderVideoService.saveByVO(vo);
+                num = folderApkService.saveByVO(vo);
             }
 
             if (num >= 1) {
@@ -55,13 +55,13 @@ public class FolderVideoController {
     @PostMapping("/delete")
     public RequestResultVO delete(@RequestBody List<String> pks) {
         RequestResultVO resultVO = new RequestResultVO();
-        List<FolderVO> folderVOs = folderVideoService.retrieveByParentPK(pks);
-        if(folderVOs!=null && folderVOs.size()>0){
+        List<FolderVO> folderVOs = folderApkService.retrieveByParentPK(pks);
+        if (folderVOs != null && folderVOs.size() > 0) {
             resultVO.setSuccess(false);
             resultVO.setMsg("此目录有子节点无法删除.");
-        }else{
+        } else {
             //TODO 有图片无法删除
-            Integer num = folderVideoService.deleteByPK(pks);
+            Integer num = folderApkService.deleteByPK(pks);
             if (num >= 1) {
                 resultVO.setSuccess(true);
                 resultVO.setMsg("查询成功");
@@ -76,7 +76,7 @@ public class FolderVideoController {
 
     @GetMapping(value = "retrieve")
     public RequestResultVO retrieve() throws Exception {
-        List<FolderVO> folderVOs = folderVideoService.retrieveAll();
+        List<FolderVO> folderVOs = folderApkService.retrieveAll();
         TreeVO tree = TreeVO.listToTreeNode(folderVOs);
         RequestResultVO resultVO = new RequestResultVO();
         if (tree != null) {
@@ -94,8 +94,8 @@ public class FolderVideoController {
     @ApiOperation(value = "移动端接口，分页获取视频目录列表")
     @GetMapping("/retrieveMobile")
     public PageResultVO retrieveMobile(FolderVO folderVO) {
-        List<FolderVO> result = folderVideoService.retrieveAllWithPage(folderVO);
-        Long count = folderVideoService.retrieveAllCount(folderVO);
+        List<FolderVO> result = folderApkService.retrieveAllWithPage(folderVO);
+        Long count = folderApkService.retrieveAllCount(folderVO);
         PageResultVO pageResultVO = new PageResultVO();
         pageResultVO.setSuccess(true);
         pageResultVO.setMsg("查询成功");

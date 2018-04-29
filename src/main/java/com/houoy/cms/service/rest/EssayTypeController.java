@@ -102,9 +102,10 @@ public class EssayTypeController {
         pageResultVO.setLength(essayTypeVO.getLength());
         pageResultVO.setOrderColumnName(essayTypeVO.getOrderColumnName());
         pageResultVO.setOrderDir(essayTypeVO.getOrderDir());
-        pageResultVO.setTotal(count + "");
+        pageResultVO.setTotal(count);
         return pageResultVO;
     }
 }
+
 
 

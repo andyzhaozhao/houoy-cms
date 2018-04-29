@@ -21,4 +21,5 @@ public class NginxConfig {
     private String pass;
     private String path;
     private String pathVideo;
+    private String pathApk;
 }

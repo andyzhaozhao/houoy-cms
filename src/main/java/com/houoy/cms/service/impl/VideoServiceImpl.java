@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("videoService")
-public class VideoServiceImpl extends BaseServiceImpl<VideoMapper, VideoVO> implements VideoService {
+public class VideoServiceImpl extends BaseServiceImpl<VideoMapper, VideoVO> implements VideoService<VideoVO> {
 
     @Override
     @Autowired

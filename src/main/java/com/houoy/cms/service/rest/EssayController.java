@@ -108,7 +108,7 @@ public class EssayController {
         pageResultVO.setLength(essayVO.getLength());
         pageResultVO.setOrderColumnName(essayVO.getOrderColumnName());
         pageResultVO.setOrderDir(essayVO.getOrderDir());
-        pageResultVO.setTotal(count + "");
+        pageResultVO.setTotal(count);
         return pageResultVO;
     }
 }
