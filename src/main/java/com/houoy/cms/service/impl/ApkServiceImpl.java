@@ -15,4 +15,10 @@ public class ApkServiceImpl extends BaseServiceImpl<ApkMapper, ApkVO> implements
     protected void setService(ApkMapper _mapper) {
         mapper = _mapper;
     }
+
+    @Override
+    public ApkVO retrieveLast() throws RuntimeException {
+        return mapper.retrieveLast();
+    }
+
 }

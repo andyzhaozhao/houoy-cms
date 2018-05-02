@@ -26,15 +26,24 @@ cms:
   date: 2017-02-21
   localFilePath: F:/
 
-nginx:
-  url: 47.94.6.120
-  port: 22
-  user: root
-  pass: Andy891014@
-  path: /usr/local/nginx/html/image
-  pathVideo: /usr/local/nginx/html/video
-  pathApk: /usr/local/nginx/html/apk
+#nginx:
+#  url: 47.94.6.120
+#  port: 22
+#  user: root
+#  pass: Andy891014@
+#  path: /usr/local/nginx/html/image
+#  pathVideo: /usr/local/nginx/html/video
+#  pathApk: /usr/local/nginx/html/apk
 
+nginx:
+  url: localhost
+  port: 22
+  user: andyzhao
+  pass: iandtop
+  path: H:\soft\nginx\nginx-1.12.0\html\image
+  pathVideo: H:\soft\nginx\nginx-1.12.0\html\video
+  pathApk: H:/soft/nginx/nginx-1.12.0/html/
+  httpUrl: http://192.168.0.100:80/
 
 mybatis:
   mapper-locations: classpath*:mapper/**/*.xml

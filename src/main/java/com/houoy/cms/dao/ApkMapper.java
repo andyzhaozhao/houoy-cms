@@ -9,5 +9,6 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ApkMapper extends BaseMapper<ApkVO> {
-
+    //查询最新的安装包
+    ApkVO retrieveLast() throws RuntimeException;
 }

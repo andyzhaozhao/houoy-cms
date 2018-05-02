@@ -6,7 +6,6 @@ import com.houoy.cms.service.ApkService;
 import com.houoy.cms.vo.ApkVO;
 import com.houoy.common.utils.FileUtil;
 import com.houoy.common.utils.JqueryDataTablesUtil;
-import com.houoy.common.utils.SftpUtils;
 import com.houoy.common.vo.JquryDataTablesVO;
 import com.houoy.common.vo.PageResultVO;
 import com.houoy.common.vo.RequestResultVO;
@@ -15,11 +14,11 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -27,11 +26,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * apk安装包管理
@@ -50,19 +46,35 @@ public class ApkController {
 
     @Autowired
     private CommonConfig commonConfig;
-    
-    @PostMapping("/save")
-    public RequestResultVO add(@RequestBody ApkVO apkVO) throws IOException {
+
+    @GetMapping(value = "/check")
+    public ApkVO check() {
+        return apkService.retrieveLast();
+    }
+
+    @ResponseBody
+    @RequestMapping("/save")
+    //上传图片和属性
+    public RequestResultVO add(ApkVO apkVO, HttpServletRequest request) throws IOException {
         Integer num = 0;
         RequestResultVO resultVO = new RequestResultVO();
         if (apkVO != null) {
-            if (apkVO.getPk_apk() != null) {//如果前端传递过来pk,则判断为更新操作
-                num = apkService.updateByVO(apkVO);
-            } else {
-                num = apkService.saveByVO(apkVO);
-            }
+            List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
+            if (files != null && files.size() > 0) {
+                MultipartFile file = files.get(0);
+                String fileName = file.getOriginalFilename();
+                String localPath = nginxConfig.getPathApk() + apkVO.getUrl() + File.separator + fileName;
+                FileUtil.save(file.getInputStream(), localPath);
 
-            if (num >= 1) {
+                String url = nginxConfig.getHttpUrl() + apkVO.getUrl() + File.separator + fileName;
+                apkVO.setUrl(url);
+                if (apkVO.getPk_apk() != null) {
+                    //如果前端传递过来pk,则判断为更新操作
+                    num = apkService.updateByVO(apkVO);
+                } else {
+                    num = apkService.saveByVO(apkVO);
+                }
+
                 resultVO.setSuccess(true);
                 resultVO.setMsg("保存成功");
                 resultVO.setResultData(num);
@@ -73,90 +85,6 @@ public class ApkController {
         } else {
             resultVO.setSuccess(false);
             resultVO.setMsg("参数不可为null");
-        }
-        return resultVO;
-    }
-
-    //生成上传唯一编号
-    private String generateUploadId() {
-        String guid = UUID.randomUUID().toString();
-        return guid.replace("-", "");
-    }
-
-    @PostMapping("/upload")
-    public RequestResultVO upload(String uploadId, int total, int index, String path, HttpServletRequest request) throws IOException {
-        RequestResultVO resultVO = new RequestResultVO();
-        if (total < 1) {
-            resultVO.setSuccess(false);
-            resultVO.setMsg("块数量不能小于1");
-        }
-        if (index < 0) {
-            resultVO.setSuccess(false);
-            resultVO.setMsg("当前块不能小于0");
-        }
-
-        if (StringUtils.isEmpty(uploadId) && index > 0) {
-            resultVO.setSuccess(false);
-            resultVO.setMsg("上传编号为空");
-        }
-
-        List<MultipartFile> files = ((MultipartHttpServletRequest) request).getFiles("file");
-        String fileName = request.getParameter("fileName");
-        if (files != null && files.size() > 0) {
-            MultipartFile file = files.get(0);
-            //首次上传需创建上传编号
-            if (StringUtils.isEmpty(uploadId) || uploadId.equals("undefind")) {
-                uploadId = generateUploadId();
-            }
-
-            //块处理
-            //块文件名称,先缓存块儿到本地
-            String blockName = uploadId + "_" + index + ".block";
-            String folerPath = commonConfig.getLocalFilePath() + "/" + fileName + "/";
-            File folder = new File(folerPath);
-            File fileToCache = FileUtil.createFile(folerPath + blockName);
-            FileUtil.writeFile(fileToCache, file.getBytes());
-
-            resultVO.setSuccess(true);
-            resultVO.setMsg("保存成功");
-            resultVO.setUploadId(uploadId);
-            resultVO.setResultData("0");//说明部分上传成功
-
-            //如果是最后一块
-            //判断块文件是否已将上传完，上传完合并文件
-            List<File> allblocks = FileUtil.allFiles(folder, ".block");
-            List<File> blocks = new ArrayList();
-            for (File tf : allblocks) {
-                if (tf.getName().contains(uploadId)) {
-                    blocks.add(tf);
-                }
-            }
-
-            if (blocks.size() >= total) {//是最后一块
-                String newFileName = folerPath + fileName;
-                for (int i = 0; i < total; i++) {
-//                    File blockPathFile = new File(folerPath + uploadId + "_" + i + ".block");
-                    //写到一个文件
-                    File ff = new File(folerPath + uploadId + "_" + i + ".block");
-                    FileInputStream fi = new FileInputStream(ff);
-                    FileUtil.save(fi, newFileName);//合并为一个文件
-                    ff.delete();
-                }
-
-                //上传到资源服务器
-                SftpUtils sftpUtils = new SftpUtils(nginxConfig.getUrl(), nginxConfig.getPort(), nginxConfig.getUser()
-                        , nginxConfig.getPass());
-                File nff = new File(newFileName);
-                FileInputStream newFileInputStream = new FileInputStream(nff);
-                sftpUtils.upload(nginxConfig.getPathApk() + "/" + path, newFileInputStream, fileName);
-                newFileInputStream.close();
-                nff.delete();
-
-                resultVO.setResultData("1");//如果为1说明全部上传成功
-            }
-        } else {
-            resultVO.setSuccess(false);
-            resultVO.setMsg("文件不能为空");
         }
         return resultVO;
     }

@@ -27,6 +27,9 @@
     <select id="retrieveAll" resultType="java.util.Map">
 
     </select>
+    <select id="retrieveLast" resultType="com.houoy.cms.vo.ApkVO">
+           SELECT * FROM cms_apk ORDER BY newestVersionCode desc LIMIT 0, 1
+    </select>
     <select id="retrieveAllCount" resultType="java.lang.Long">
         select count(*) from cms_apk
         <where>

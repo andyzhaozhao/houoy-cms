@@ -1,6 +1,7 @@
 package com.houoy.cms.service.rest;
 
 import com.houoy.cms.service.FolderApkService;
+import com.houoy.cms.vo.ApkVO;
 import com.houoy.cms.vo.FolderVO;
 import com.houoy.common.vo.PageResultVO;
 import com.houoy.common.vo.RequestResultVO;
@@ -25,6 +26,17 @@ public class FolderApkController {
 
     @Resource
     private FolderApkService folderApkService;
+
+    @GetMapping(value = "/check")
+    public ApkVO check() {
+        ApkVO version = new ApkVO();
+        version.setNewestVersionCode(7);
+        version.setNewestVersionName("0.6.1");
+        version.setUrl("http://192.168.1.28/a.apk");
+        version.setSize("4.25M");
+        version.setComment("增加更新功能，增加版本验证功能");
+        return version;
+    }
 
     @PostMapping("/save")
     public RequestResultVO add(@RequestBody FolderVO vo) {
